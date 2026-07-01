@@ -1,0 +1,60 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+
+# ─── Virtual Environments ─────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+.env
+
+# ─── ML Artifacts (large binaries — tracked via Git LFS or excluded) ──────────
+# Uncomment the lines below if you do NOT want to commit model binaries:
+# models/*.pkl
+
+# ─── Jupyter Notebooks ────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ─── IDE & Editor ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs & Temp ──────────────────────────────────────────────────────────────
+*.log
+logs/
+tmp/
+temp/
+
+# ─── Distribution / Packaging ─────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ─── Test Coverage ────────────────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ─── Flask Specific ───────────────────────────────────────────────────────────
+instance/
+flask_session/
+
+# ─── Static assets auto-generated ────────────────────────────────────────────
+static/images/plots/
