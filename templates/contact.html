@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact the CreditAI team — GitHub, LinkedIn, and project repository." />
+  <title>CreditAI</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ─── Navbar ─────────────────────────────────────────────────── -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+      <div class="brand-icon">💳</div>
+      Credit<span style="color:#60a5fa">AI</span>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Toggle navigation">
+      <span style="color:#fff;font-size:1.4rem">☰</span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('contact') }}">Contact</a></li>
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link nav-cta" href="{{ url_for('predict_view') }}">
+            <i class="bi bi-cpu me-1"></i>Predict Now
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Page Header ─────────────────────────────────────────────── -->
+<div style="background:var(--grad-hero);padding:4rem 0 3rem;">
+  <div class="container text-center" style="position:relative;z-index:1;">
+    <span class="hero-badge"><i class="bi bi-envelope-fill"></i> Get In Touch</span>
+    <h1 style="color:#fff;font-size:2.2rem;margin-top:1rem;margin-bottom:.75rem;">Contact & Resources</h1>
+    <p style="color:rgba(255,255,255,.65);max-width:520px;margin:0 auto;">
+      Have questions about the project, ML model, or deployment? Reach out via any of the channels below.
+    </p>
+  </div>
+</div>
+
+<!-- ─── Contact Cards ──────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="row g-4 justify-content-center mb-5">
+      <div class="col-md-4">
+        <div class="contact-card fade-up">
+          <div class="contact-icon icon-blue">
+            <i class="bi bi-github"></i>
+          </div>
+          <h5 class="fw-700">GitHub Repository</h5>
+          <p class="text-secondary small mb-3">
+            View the complete source code, training scripts, notebooks, and deployment configuration.
+          </p>
+          <a href="https://github.com/moramrashmi/Credit-Card-Approval-Prediction-System" target="_blank" class="btn-primary-custom" style="width:100%;justify-content:center;" id="github-btn">
+            <i class="bi bi-github"></i> View on GitHub
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="contact-card fade-up" style="transition-delay:.1s">
+          <div class="contact-icon icon-green">
+            <i class="bi bi-linkedin"></i>
+          </div>
+          <h5 class="fw-700">LinkedIn</h5>
+          <p class="text-secondary small mb-3">
+            Connect with the developer on LinkedIn to discuss the project, ML engineering, or collaboration opportunities.
+          </p>
+          <a href="https://www.linkedin.com/in/rashmi-moram-8b1712288/" target="_blank" class="btn-primary-custom" style="width:100%;justify-content:center;background:#0a66c2;" id="linkedin-btn">
+            <i class="bi bi-linkedin"></i> Connect
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="contact-card fade-up" style="transition-delay:.2s">
+          <div class="contact-icon icon-purple">
+            <i class="bi bi-envelope-fill"></i>
+          </div>
+          <h5 class="fw-700">Email</h5>
+          <p class="text-secondary small mb-3">
+            Send an email for academic collaboration, bug reports, or feature suggestions.
+          </p>
+          <a href="mailto:moramrashmi@gmail.com" target="_blank" class="btn-primary-custom" style="width:100%;justify-content:center;background:#7c3aed;" id="email-btn">
+            <i class="bi bi-envelope-fill"></i> Send Email
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Contact Form ────────────────────────────────────────────── -->
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="predict-card fade-up">
+          <div class="predict-card-header" style="padding:1.75rem 2rem;">
+            <h5 style="margin:0;font-size:1rem;display:flex;align-items:center;gap:.5rem;">
+              <i class="bi bi-chat-dots-fill"></i> Send a Message
+            </h5>
+          </div>
+          <div class="predict-card-body" style="padding:2rem;">
+            <form id="contact-form" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="contact-name">Full Name</label>
+                  <input type="text" class="form-control" id="contact-name" name="name"
+                         placeholder="John Doe" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="contact-email">Email Address</label>
+                  <input type="email" class="form-control" id="contact-email" name="email"
+                         placeholder="moramrashmi@gmail.com" required />
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="contact-subject">Subject</label>
+                  <select class="form-select" id="contact-subject" name="subject">
+                    <option value="general">General Enquiry</option>
+                    <option value="bug">Bug Report</option>
+                    <option value="feature">Feature Suggestion</option>
+                    <option value="academic">Academic Collaboration</option>
+                    <option value="internship">Internship / Job</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="contact-message">Message</label>
+                  <textarea class="form-control" id="contact-message" name="message"
+                            rows="5" placeholder="Write your message here…" required></textarea>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn-primary-custom w-100 justify-content-center" id="contact-submit-btn">
+                    <i class="bi bi-send-fill"></i>
+                    Send Message
+                  </button>
+                  <p class="form-text mt-2 text-center">
+                    This is a demo form — messages are not actually sent.
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Project Info ────────────────────────────────────────────── -->
+    <div class="row mt-5 g-4">
+      <div class="col-12">
+        <div class="divider-text mb-4">Project Information</div>
+      </div>
+      <div class="col-md-4">
+        <div style="display:flex;gap:1rem;align-items:flex-start;">
+          <div style="width:44px;height:44px;background:var(--primary-light);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">🎓</div>
+          <div>
+            <h6 class="fw-700 mb-1">Academic Project</h6>
+            <p class="text-secondary small mb-0">B.Tech AI&ML Project</p>Demonstrates full-stack ML engineering.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="display:flex;gap:1rem;align-items:flex-start;">
+          <div style="width:44px;height:44px;background:#f0fdf4;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">📄</div>
+          <div>
+            <h6 class="fw-700 mb-1">MIT Licensed</h6>
+            <p class="text-secondary small mb-0">Open source under the MIT License. Free to use, modify, and distribute with attribution.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="display:flex;gap:1rem;align-items:flex-start;">
+          <div style="width:44px;height:44px;background:#faf5ff;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">☁️</div>
+          <div>
+            <h6 class="fw-700 mb-1">Deployed on Render</h6>
+            <p class="text-secondary small mb-0">Production deployment via Render's free tier. Auto-deploys from the GitHub main branch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── Footer ─────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© CreditAI — Credit Card Approval Prediction System</span>
+      <span><i class="bi bi-mortarboard me-1"></i>Internship Project</span>
+      <span><i class="bi bi-github me-1"></i>Open Source</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

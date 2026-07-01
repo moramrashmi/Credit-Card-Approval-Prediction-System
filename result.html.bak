@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Credit card approval prediction result — AI decision with confidence score and risk assessment." />
+  <title>
+    {% if result.approved %}Approved{% else %}Rejected{% endif %} — CreditAI Result
+  </title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ─── Navbar ─────────────────────────────────────────────────── -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+      <div class="brand-icon">💳</div>
+      Credit<span style="color:#60a5fa">AI</span>
+    </a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+        <li class="nav-item ms-lg-2">
+          <a class="nav-link nav-cta" href="{{ url_for('predict_view') }}">
+            <i class="bi bi-cpu me-1"></i>New Prediction
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Result Hero ───────────────────────────────────────────────── -->
+<section class="result-hero {{ 'approved' if result.approved else 'rejected' }}">
+  <div class="container text-center" style="position:relative;z-index:1;">
+    <div class="result-icon {{ 'approved' if result.approved else 'rejected' }}">
+      {% if result.approved %}
+        <i class="bi bi-check-circle-fill"></i>
+      {% else %}
+        <i class="bi bi-x-circle-fill"></i>
+      {% endif %}
+    </div>
+
+    <h1 class="result-title">{{ result.approval_label }}</h1>
+    <p class="result-subtitle mb-4">{{ result.confidence }}</p>
+
+    <!-- Probability Gauge -->
+    <div class="prob-gauge" id="prob-gauge-value" data-prob="{{ result.probability }}">
+      <svg viewBox="0 0 180 180" width="180" height="180">
+        <circle class="prob-gauge-track" cx="90" cy="90" r="80"/>
+        <circle class="prob-gauge-fill" cx="90" cy="90" r="80"/>
+      </svg>
+      <div class="prob-gauge-label">
+        <span class="prob-value" data-counter="{{ result.probability }}" data-suffix="%">0%</span>
+        <span class="prob-text">Approval<br>Probability</span>
+      </div>
+    </div>
+
+    <!-- Risk Badge -->
+    <div class="mt-2">
+      {% if result.risk_level == 'Low Risk' %}
+        <span class="risk-badge risk-low"><i class="bi bi-shield-check"></i> {{ result.risk_level }}</span>
+      {% elif result.risk_level == 'Medium Risk' %}
+        <span class="risk-badge risk-medium"><i class="bi bi-shield-exclamation"></i> {{ result.risk_level }}</span>
+      {% else %}
+        <span class="risk-badge risk-high"><i class="bi bi-shield-x"></i> {{ result.risk_level }}</span>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ─── Metric Cards ───────────────────────────────────────────────── -->
+<section class="section" style="padding:3rem 0;">
+  <div class="container">
+    <div class="row g-3 mb-5">
+      <div class="col-6 col-md-3">
+        <div class="metric-card fade-up">
+          <div class="metric-icon">
+            {% if result.approved %}✅{% else %}❌{% endif %}
+          </div>
+          <div class="metric-value">{{ result.approval_label }}</div>
+          <div class="metric-label">Decision</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="metric-card fade-up" style="transition-delay:.1s">
+          <div class="metric-icon">📊</div>
+          <div class="metric-value">
+            <span data-counter="{{ result.probability }}" data-suffix="%">0%</span>
+          </div>
+          <div class="metric-label">Approval Probability</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="metric-card fade-up" style="transition-delay:.2s">
+          <div class="metric-icon">
+            {% if result.risk_level == 'Low Risk' %}🟢
+            {% elif result.risk_level == 'Medium Risk' %}🟡
+            {% else %}🔴{% endif %}
+          </div>
+          <div class="metric-value">{{ result.risk_level.split(' ')[0] }}</div>
+          <div class="metric-label">Risk Level</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="metric-card fade-up" style="transition-delay:.3s">
+          <div class="metric-icon">🤖</div>
+          <div class="metric-value" style="font-size:1.5rem;">{{ model_name }}</div>
+          <div class="metric-label">Model Used</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Detail Cards ─────────────────────────────────────────────── -->
+    <div class="row g-4">
+      <!-- Decision Summary Card -->
+      <div class="col-lg-5">
+        <div class="predict-card fade-up" style="height:100%;">
+          <div class="predict-card-header" style="padding:1.5rem 2rem;">
+            <h5 style="margin:0;font-size:1rem;display:flex;align-items:center;gap:.5rem;">
+              <i class="bi bi-clipboard-check"></i> Decision Summary
+            </h5>
+          </div>
+          <div class="predict-card-body" style="padding:1.75rem 2rem;">
+            <!-- Probability Bar -->
+            <p class="text-secondary" style="font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;">
+              Approval Probability
+            </p>
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div style="flex:1;background:var(--border);border-radius:50px;height:10px;overflow:hidden;">
+                <div style="
+                  height:100%;
+                  width:{{ result.probability }}%;
+                  background:{% if result.approved %}linear-gradient(90deg,#059669,#34d399){% else %}linear-gradient(90deg,#dc2626,#f87171){% endif %};
+                  border-radius:50px;
+                  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+                "></div>
+              </div>
+              <span style="font-weight:700;min-width:3rem;text-align:right;">{{ result.probability }}%</span>
+            </div>
+
+            <!-- Status breakdown -->
+            <div style="background:var(--surface-2);border-radius:var(--radius-md);padding:1rem 1.25rem;">
+              <div class="d-flex justify-content-between mb-2">
+                <span style="font-size:.85rem;color:var(--text-secondary);">Decision</span>
+                <strong style="font-size:.9rem;color:{% if result.approved %}#059669{% else %}#dc2626{% endif %};">
+                  {{ result.approval_label }}
+                </strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span style="font-size:.85rem;color:var(--text-secondary);">Risk Category</span>
+                <strong style="font-size:.9rem;">{{ result.risk_level }}</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span style="font-size:.85rem;color:var(--text-secondary);">Confidence</span>
+                <strong style="font-size:.9rem;">
+                  {% set p = result.probability %}
+                  {% if (result.approved and p >= 75) or (not result.approved and p <= 25) %}High
+                  {% elif (result.approved and p >= 60) or (not result.approved and p <= 40) %}Moderate
+                  {% else %}Low{% endif %}
+                </strong>
+              </div>
+            </div>
+
+            <!-- Recommendation -->
+            <div class="mt-3 p-3 rounded" style="
+              background:{% if result.approved %}#f0fdf4{% else %}#fef2f2{% endif %};
+              border-left:4px solid {% if result.approved %}#059669{% else %}#dc2626{% endif %};
+            ">
+              <p style="margin:0;font-size:.83rem;color:{% if result.approved %}#065f46{% else %}#991b1b{% endif %};">
+                <strong>Recommendation:</strong>
+                {% if result.approved %}
+                  The applicant shows a strong credit profile. Proceed with standard onboarding procedures and verify submitted documents.
+                {% else %}
+                  The applicant presents elevated credit risk. Consider requesting additional income proof or a co-applicant before proceeding.
+                {% endif %}
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Applicant Details Card -->
+      <div class="col-lg-7">
+        <div class="predict-card fade-up" style="transition-delay:.1s;height:100%;">
+          <div class="predict-card-header" style="padding:1.5rem 2rem;">
+            <h5 style="margin:0;font-size:1rem;display:flex;align-items:center;gap:.5rem;">
+              <i class="bi bi-person-lines-fill"></i> Applicant Details
+            </h5>
+          </div>
+          <div class="predict-card-body" style="padding:1.5rem 2rem;">
+            <div class="table-responsive">
+              <table class="info-table w-100">
+                <thead>
+                  <tr>
+                    <th>Feature</th>
+                    <th>Value</th>
+                    <th>Feature</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Gender</td>
+                    <td><strong>{{ 'Female' if applicant.get('CODE_GENDER') == 'F' else 'Male' }}</strong></td>
+                    <td>Age</td>
+                    <td><strong>{{ applicant.get('Age', '—') }} yrs</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Family Status</td>
+                    <td><strong>{{ applicant.get('NAME_FAMILY_STATUS', '—') }}</strong></td>
+                    <td>Income</td>
+                    <td><strong>${{ applicant.get('AMT_INCOME_TOTAL', '—') }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Children</td>
+                    <td><strong>{{ applicant.get('CNT_CHILDREN', '—') }}</strong></td>
+                    <td>Family Members</td>
+                    <td><strong>{{ applicant.get('CNT_FAM_MEMBERS', '—') }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Years Employed</td>
+                    <td><strong>{{ applicant.get('YearsEmployed', '—') }} yrs</strong></td>
+                    <td>Employed</td>
+                    <td><strong>{{ 'Yes' if applicant.get('IsEmployed') == 'Y' else 'No' }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Own Car</td>
+                    <td><strong>{{ 'Yes' if applicant.get('FLAG_OWN_CAR') == 'Y' else 'No' }}</strong></td>
+                    <td>Own Property</td>
+                    <td><strong>{{ 'Yes' if applicant.get('FLAG_OWN_REALTY') == 'Y' else 'No' }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Income Type</td>
+                    <td><strong>{{ applicant.get('NAME_INCOME_TYPE', '—') }}</strong></td>
+                    <td>Education</td>
+                    <td><strong>{{ applicant.get('NAME_EDUCATION_TYPE', '—') }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Housing Type</td>
+                    <td><strong>{{ applicant.get('NAME_HOUSING_TYPE', '—') }}</strong></td>
+                    <td>Occupation</td>
+                    <td><strong>{{ applicant.get('OCCUPATION_TYPE', '—') or 'Unknown' }}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Actions ──────────────────────────────────────────────────── -->
+    <div class="text-center mt-5 d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{{ url_for('predict_view') }}" class="btn-primary-custom" id="new-prediction-btn">
+        <i class="bi bi-arrow-repeat"></i>
+        New Prediction
+      </a>
+      <a href="{{ url_for('index') }}" class="btn-outline-custom" id="back-home-btn">
+        <i class="bi bi-house-fill"></i>
+        Back to Home
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── Footer ─────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2024 CreditAI — Credit Card Approval Prediction System</span>
+      <span><i class="bi bi-mortarboard me-1"></i>B.Tech Final Year Project</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
