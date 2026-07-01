@@ -9,17 +9,6 @@ import logging
 import sys
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")          # non-interactive backend; safe in Flask/server
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import requests
-from sklearn.metrics import (
-    accuracy_score, classification_report, confusion_matrix,
-    f1_score, precision_score, recall_score, roc_auc_score,
-)
-
 from config import LOG_FORMAT, LOG_DATE, LOG_LEVEL, PLOTS_DIR
 
 
@@ -53,6 +42,8 @@ def download_dataset(url: str, destination: Path) -> Path:
 
     Returns the destination path so callers can chain operations.
     """
+    import requests
+
     logger = get_logger(__name__)
     if destination.exists():
         logger.info("Dataset already exists at %s — skipping download.", destination)
@@ -76,6 +67,11 @@ def evaluate_model(model, X_test, y_test, model_name: str = "Model") -> dict:
     Returns a dict with accuracy, precision, recall, f1, roc_auc
     and also prints the full classification report.
     """
+    from sklearn.metrics import (
+        accuracy_score, classification_report,
+        f1_score, precision_score, recall_score, roc_auc_score,
+    )
+
     logger = get_logger(__name__)
     y_pred = model.predict(X_test)
     y_prob = (
@@ -115,6 +111,8 @@ def evaluate_model(model, X_test, y_test, model_name: str = "Model") -> dict:
 
 def _save_fig(filename: str) -> None:
     """Save current matplotlib figure to PLOTS_DIR and close it."""
+    import matplotlib.pyplot as plt
+
     PLOTS_DIR.mkdir(parents=True, exist_ok=True)
     path = PLOTS_DIR / filename
     plt.savefig(path, bbox_inches="tight", dpi=150)
@@ -123,7 +121,11 @@ def _save_fig(filename: str) -> None:
 
 def plot_confusion_matrix(y_test, y_pred, labels: list, filename: str) -> None:
     """Render and save a labelled confusion matrix heatmap."""
+    import matplotlib
+    matplotlib.use("Agg")
     import seaborn as sns
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import confusion_matrix
 
     cm = confusion_matrix(y_test, y_pred)
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -139,6 +141,9 @@ def plot_confusion_matrix(y_test, y_pred, labels: list, filename: str) -> None:
 
 def plot_roc_curve(model, X_test, y_test, model_name: str, filename: str) -> None:
     """Render and save a ROC curve for *model*."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
     from sklearn.metrics import RocCurveDisplay
 
     fig, ax = plt.subplots(figsize=(7, 5))
@@ -149,9 +154,14 @@ def plot_roc_curve(model, X_test, y_test, model_name: str, filename: str) -> Non
     _save_fig(filename)
 
 
-def plot_feature_importance(feature_names: list, importances: np.ndarray,
+def plot_feature_importance(feature_names: list, importances,
                              top_n: int = 15, filename: str = "feature_importance.png") -> None:
     """Bar chart of top-N feature importances."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import numpy as np
+
     indices = np.argsort(importances)[::-1][:top_n]
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.barh(
@@ -167,7 +177,7 @@ def plot_feature_importance(feature_names: list, importances: np.ndarray,
 
 # ─── DataFrame Helpers ────────────────────────────────────────────────────────
 
-def summarise_dataframe(df: pd.DataFrame) -> None:
+def summarise_dataframe(df) -> None:
     """Print a rich summary of a DataFrame (shape, dtypes, nulls, stats)."""
     logger = get_logger(__name__)
     logger.info("Shape: %s", df.shape)
