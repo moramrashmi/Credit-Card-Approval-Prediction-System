@@ -1,8 +1,0 @@
-dataset/
-notebooks/
-tests/
-history_all.txt
-history_predict.txt
-*.bak
-extract_history.py
-train.py
