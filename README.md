@@ -329,26 +329,6 @@ Current Status
 
 ---
 
-# 📸 Screenshots
-
-## Home Page
-
-> *(Add screenshot here)*
-
----
-
-## Prediction Form
-
-> *(Add screenshot here)*
-
----
-
-## Prediction Result
-
-> *(Add screenshot here)*
-
----
-
 # 💻 Technologies Used
 
 ### Backend
