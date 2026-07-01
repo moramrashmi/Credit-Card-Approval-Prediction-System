@@ -12,6 +12,14 @@
   },
   "routes": [
     {
+      "src": "/static/(.*)",
+      "handle": "filesystem"
+    },
+    {
+      "src": "/favicon.ico",
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "wsgi.py"
     }
