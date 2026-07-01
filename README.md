@@ -1,253 +1,431 @@
-# 💳 CreditAI — Credit Card Approval Prediction System
+# 💳 Credit Card Approval Prediction System
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.12+-blue?style=for-the-badge&logo=python)
-![Flask](https://img.shields.io/badge/Flask-3.0-black?style=for-the-badge&logo=flask)
-![Random Forest](https://img.shields.io/badge/Random_Forest-scikit--learn-orange?style=for-the-badge)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple?style=for-the-badge&logo=bootstrap)
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=for-the-badge&logo=flask)
+![Scikit Learn](https://img.shields.io/badge/Scikit--Learn-ML-F7931E?style=for-the-badge&logo=scikitlearn)
+![XGBoost](https://img.shields.io/badge/XGBoost-Gradient%20Boosting-EC6B23?style=for-the-badge)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel)
 
-**An AI-powered credit card approval prediction system built with Flask and scikit-learn.**  
-*B.Tech Final Year Project · Portfolio Showcase · Production-Ready*
+### AI-Powered Credit Card Approval Prediction using Machine Learning & Flask
 
-[🚀 Live Demo](#) · [📊 Model Results](#model-results) · [🛠 Installation](#installation) · [📖 API Docs](#backend-api)
+Predict credit card approval decisions using advanced machine learning models trained on real-world banking datasets.
 
 </div>
 
 ---
 
-## 📋 Table of Contents
+# 📌 Overview
 
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Folder Structure](#folder-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Model Results](#model-results)
-- [Deployment (Vercel)](#deployment-vercel)
-- [Future Improvements](#future-improvements)
-- [License](#license)
+Banks receive thousands of credit card applications every day. Manual review of each application is time-consuming and prone to human error.
 
----
+This project automates the approval process using Machine Learning by analyzing an applicant's financial profile and predicting whether a credit card application is likely to be **Approved** or **Rejected**.
 
-## Overview
+The system provides
 
-Banks process thousands of credit card applications daily. Manual review is slow, expensive, and inconsistent. **CreditAI** automates this with a machine learning pipeline trained on the **Kaggle Credit Card Approval Dataset**.
-
-Given 17 applicant features (financial, demographic, and employment data), the system predicts:
-- ✅ **Approved** or ❌ **Rejected**
-- 📊 **Approval probability** (0–100%)
-- 🛡️ **Risk level** (Low / Medium / High)
-- 💬 **Confidence explanation** in plain English
+- ✅ Instant approval prediction
+- 📈 Approval probability
+- ⚠️ Risk classification
+- 🤖 Best-performing ML model inference
+- 🌐 Interactive Flask web application
 
 ---
 
-## Features
+# ✨ Features
+
+- Professional Banking Dashboard UI
+- Machine Learning Pipeline
+- Real-Time Prediction
+- Feature Engineering
+- Multiple Classification Algorithms
+- Approval Probability
+- Risk Level Detection
+- Applicant Summary
+- Responsive Design
+- Deployment Ready
+- Clean Modular Architecture
+- Automated Testing
+
+---
+
+# 🧠 Machine Learning Workflow
+
+```text
+Application Record
+        +
+Credit Record
+        │
+        ▼
+Data Cleaning
+        │
+        ▼
+Feature Engineering
+        │
+        ▼
+Encoding
+        │
+        ▼
+Scaling
+        │
+        ▼
+Model Training
+        │
+        ▼
+Cross Validation
+        │
+        ▼
+Best Model Selection
+        │
+        ▼
+Prediction
+```
+
+---
+
+# 📊 Dataset
+
+This project uses two datasets:
+
+## application_record.csv
+
+Contains applicant information such as
+
+- Gender
+- Income Type
+- Annual Income
+- Education
+- Occupation
+- Family Status
+- Housing Type
+- Employment Duration
+- Family Members
+
+---
+
+## credit_record.csv
+
+Contains customer credit history
+
+- ID
+- MONTHS_BALANCE
+- STATUS
+
+The datasets are merged using
+
+```
+ID
+```
+
+to build a complete applicant profile.
+
+---
+
+# ⚙️ Data Preprocessing
+
+The preprocessing pipeline performs
+
+- Missing Value Imputation
+- Duplicate Removal
+- Dataset Merge
+- Binary Target Generation
+- Feature Encoding
+- Feature Scaling
+- Feature Engineering
+- Stratified Train-Test Split
+
+---
+
+# 🔧 Feature Engineering
+
+The following engineered features are automatically created.
 
 | Feature | Description |
-|---|---|
-| 🤖 **ML Pipeline** | Logistic Regression, Decision Tree, Random Forest, XGBoost trained and compared |
-| 🌲 **Random Forest** | Best-performing model selected automatically via cross-validation |
-| 🔧 **Feature Engineering** | Employment stability, income groups, financial stability score, risk score |
-| 📊 **Cross-Validation** | 5-fold stratified CV to prevent overfitting |
-| 🌐 **Flask Web App** | 5 pages: Home, About, Predict, Result, Contact |
-| 🎨 **Premium UI** | Banking-grade Bootstrap 5 design with smooth animations |
-| ✅ **Validation** | Client-side (JS) + server-side (Python) input validation |
-| 📈 **Confidence Score** | Dynamic probability thresholding mapping to risk levels |
-| ☁️ **Deployment** | Serverless-ready for Vercel with `vercel.json` |
+|----------|-------------|
+| Age Years | Converts DAYS_BIRTH into years |
+| Years Employed | Converts employment days into years |
+| Employment Stability | Measures employment consistency |
+| Income Group | Categorizes applicants into Low / Medium / High income |
+| Income Per Family Member | Income normalized by family size |
+| Financial Stability Score | Composite financial indicator |
+| Risk Score | Normalized financial risk metric |
 
 ---
 
-## Architecture
+# 🤖 Machine Learning Models
 
-```
-User Input (Flask Form)
-        │
-        ▼
- Input Validation (app.py)
-        │
-        ▼
- Feature Engineering (preprocessing.py)
-   ├── EmploymentStability
-   ├── IncomeGroup
-   ├── FinancialStabilityScore
-   └── RiskScore
-        │
-        ▼
- sklearn ColumnTransformer
-   ├── Numeric: Impute → StandardScaler
-   └── Categorical: Impute → OrdinalEncoder
-        │
-        ▼
- Random Forest Classifier
-        │
-        ▼
- Result (Probability + Decision + Risk)
-```
+The project trains multiple classification algorithms.
+
+- Logistic Regression
+- Decision Tree
+- Random Forest
+- XGBoost
+
+The best model is selected using
+
+- Cross Validation
+- ROC-AUC
+- Accuracy
+- Precision
+- Recall
+- F1 Score
 
 ---
 
-## Folder Structure
+# 📈 Model Performance
+
+| Model | Accuracy | ROC-AUC |
+|--------|----------|----------|
+| Random Forest | 82.6% | 0.726 |
+| XGBoost | 74.1% | 0.712 |
+| Decision Tree | 60.0% | 0.596 |
+| Logistic Regression | 55.6% | 0.552 |
+
+🏆 **Best Model:** Random Forest
+
+---
+
+# 🌐 Web Application
+
+The Flask application provides
+
+### 🏠 Home
+
+Professional landing page.
+
+---
+
+### 📝 Prediction Form
+
+Applicants enter
+
+- Gender
+- Income
+- Education
+- Employment
+- Housing
+- Family Information
+- Occupation
+
+---
+
+### 📊 Result Dashboard
+
+Displays
+
+- Approval Decision
+- Approval Probability
+- Risk Category
+- Model Used
+- Applicant Details
+- Recommendation
+
+---
+
+# 📂 Project Structure
 
 ```
 CreditCardApprovalPrediction/
+
+│
 ├── dataset/
-│   ├── application_record.csv     # Applicant demographics and income
-│   └── credit_record.csv          # Monthly balance and loan statuses
+│   ├── application_record.csv
+│   └── credit_record.csv
+│
 ├── models/
-│   ├── best_model.pkl             # Trained pipeline (preprocessor + model)
-│   ├── feature_names.pkl          # Feature name list for inference
-│   └── results.json               # Model comparison metrics
+│
+├── notebooks/
+│
 ├── static/
-│   ├── css/style.css              # Custom UI styles
-│   ├── js/main.js                 # Form validation, animations
-│   └── images/plots/              # Evaluation plots
+│
 ├── templates/
-│   ├── index.html                 # Landing page
-│   ├── predict.html               # Prediction form
-│   ├── result.html                # Result display
-│   ├── about.html                 # Project about page
-│   └── contact.html               # Contact page
+│
 ├── tests/
-│   └── test_app.py                # pytest test suite
-├── app.py                         # Flask application
-├── train.py                       # Model training script
-├── preprocessing.py               # Feature engineering & pipeline
-├── predict.py                     # Prediction module
-├── utils.py                       # Shared utilities
-├── config.py                      # Centralised configuration
+│
+├── app.py
+├── preprocessing.py
+├── train.py
+├── predict.py
+├── config.py
 ├── requirements.txt
-├── vercel.json                    # Vercel deployment configuration
-├── wsgi.py                        # Serverless entry point
-└── README.md
+├── README.md
+└── LICENSE
 ```
 
 ---
 
-## Installation
+# 🚀 Installation
 
-### Prerequisites
-- Python 3.12+
-- pip
-- Git
+Clone the repository
 
-### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/yourusername/CreditCardApprovalPrediction.git
+
 cd CreditCardApprovalPrediction
 ```
 
-### Step 2: Create Virtual Environment
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
+Create virtual environment
 
-# macOS / Linux
-python3 -m venv venv
+```bash
+python -m venv venv
+```
+
+Activate
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
 source venv/bin/activate
 ```
 
-### Step 3: Install Dependencies
+Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 4: Train the Model
+---
+
+# ▶️ Train the Model
+
 ```bash
 python train.py
 ```
 
-This will:
-- Process the datasets from `dataset/`
-- Train 4 ML models (Logistic Regression, Decision Tree, Random Forest, XGBoost)
-- Run cross-validation
-- Save the best model to `models/best_model.pkl`
+---
 
-### Step 5: Run the Application
+# ▶️ Run Flask Application
+
 ```bash
 python app.py
 ```
 
-Open your browser at **http://localhost:5000**
+Open
 
----
-
-## Usage
-
-### Web Interface
-1. Navigate to `http://localhost:5000`
-2. Click **"Predict Now"**
-3. Fill in all 17 applicant fields
-4. Click **"Predict Approval"**
-5. View the decision, probability score, and risk level
-
-### Run Tests
-```bash
-pytest tests/ -v
+```
+http://127.0.0.1:5000
 ```
 
 ---
 
-## Model Results
+# 🧪 Testing
 
-Based on 5-fold stratified cross-validation on the Kaggle dataset:
+Run
 
-| Model | Accuracy | Precision | Recall | F1 | CV ROC-AUC |
-|---|---|---|---|---|---|
-| Logistic Regression | ~55.6% | ~0.89 | ~0.56 | ~0.69 | ~0.536 |
-| Decision Tree | ~60.0% | ~0.90 | ~0.60 | ~0.72 | ~0.592 |
-| XGBoost | ~74.1% | ~0.92 | ~0.76 | ~0.83 | ~0.686 |
-| **Random Forest (Best)** | **~82.6%** | **~0.91** | **~0.88** | **~0.89** | **~0.697** |
-
-> **Why Random Forest?**  
-> Random Forest outperformed the other models on cross-validated ROC-AUC on this specific dataset, offering the best balance between precision and recall while preventing test-set leakage.
-
----
-
-## Dataset
-
-- **Source:** [Kaggle Credit Card Approval Prediction Dataset](https://www.kaggle.com/datasets/rikdifos/credit-card-approval-prediction)
-- **Instances:** Over 36,000 unique applicants (after merging).
-- **Features:** 17 (financial, demographics, employment history).
-- **Target Extraction:** Target extracted by analyzing `credit_record.csv`. Any applicant with an overdue status (1-5) is flagged as high-risk/rejected. All others are approved.
-- **Handling Missing Values:** Median imputation for numerical data, mode imputation for categorical data.
-
----
-
-## Deployment (Vercel)
-
-Deploy this application for free on Vercel's serverless platform.
-
-### Step 1: Push to GitHub
 ```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/credit-approval-system.git
-git push -u origin main
+pytest
 ```
 
-### Step 2: Deploy on Vercel
-1. Go to [Vercel.com](https://vercel.com) and log in with GitHub.
-2. Click **Add New...** -> **Project**.
-3. Import your `credit-approval-system` repository.
-4. Vercel will automatically detect the `vercel.json` and `wsgi.py` files.
-5. Click **Deploy**.
+Current Status
+
+✅ 20 Tests Passed
 
 ---
 
-## License
+# 📸 Screenshots
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+## Home Page
+
+> *(Add screenshot here)*
 
 ---
 
-<div align="center">
-  <strong>Built with ❤️ as a B.Tech Final Year Project</strong><br/>
-  <em>Demonstrating end-to-end ML engineering: Data → Model → API → UI → Deployment</em>
-</div>
+## Prediction Form
+
+> *(Add screenshot here)*
+
+---
+
+## Prediction Result
+
+> *(Add screenshot here)*
+
+---
+
+# 💻 Technologies Used
+
+### Backend
+
+- Python
+- Flask
+
+### Machine Learning
+
+- Scikit-Learn
+- XGBoost
+- NumPy
+- Pandas
+- Joblib
+
+### Visualization
+
+- Matplotlib
+- Seaborn
+
+### Frontend
+
+- HTML5
+- CSS3
+- Bootstrap 5
+- JavaScript
+
+---
+
+# 🌍 Deployment
+
+The project is deployment-ready.
+
+Supports
+
+- Vercel
+- Render
+- Gunicorn
+- WSGI
+
+---
+
+# 📌 Future Improvements
+
+- Explainable AI using SHAP
+- Probability Calibration
+- REST API
+- User Authentication
+- Admin Dashboard
+- Batch Prediction
+- Docker Support
+
+---
+
+# ⚠️ Disclaimer
+
+This project is developed **for educational and research purposes only**.
+
+It demonstrates how machine learning can assist in credit approval decisions.
+
+It **must not** be used as a real-world banking approval system without:
+
+- Regulatory compliance
+- Bias evaluation
+- Fairness analysis
+- Human review
+
+
+
+# ⭐ Support
+
+If you found this project useful,
+
+⭐ Star this repository
+
+🍴 Fork it
+
+🤝 Contribute
+
+---
