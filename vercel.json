@@ -5,11 +5,6 @@
       "use": "@vercel/python"
     }
   ],
-  "functions": {
-    "wsgi.py": {
-      "maxDuration": 30
-    }
-  },
   "routes": [
     {
       "src": "/static/(.*)",
